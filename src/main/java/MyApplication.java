@@ -1,5 +1,6 @@
 
 import com.mycompany.smartcampusapi.resources.DiscoveryResource;
+import com.mycompany.smartcampusapi.resources.SensorResource;
 import com.mycompany.smartcampusapi.resources.SensorRoomResource;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class MyApplication extends Application {
         Set<Class<?>> registeredClasses = new HashSet<>();
         registeredClasses.add(DiscoveryResource.class);
         registeredClasses.add(SensorRoomResource.class);
+        registeredClasses.add(SensorResource.class);
         
     
         return registeredClasses;
