@@ -1,10 +1,115 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Start Page</title>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    </head>
-    <body>
-        <h1>Hello World!</h1>
-    </body>
+<head>
+    <title>Smart Campus API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td {
+            padding: 8px 10px;
+            vertical-align: top;
+        }
+
+        .method {
+            font-weight: bold;
+            width: 80px;
+        }
+
+        .endpoint {
+            width: 350px;
+        }
+
+        .get { color: green; }
+        .post { color: blue; }
+        .delete { color: red; }
+    </style>
+</head>
+<body>
+
+    <h1>Smart Campus API</h1>
+    <p>Base URL: <strong>/api/v1</strong></p>
+
+    <p><em>Note: Use Postman or curl for POST and DELETE requests.</em></p>
+    <p><em>Note: Replace path variables such as {roomId} or {sensorId} with actual IDs.</em></p>
+
+    <h2>Endpoints</h2>
+
+    <table>
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1" target="_blank">/api/v1</a></td>
+            <td>- API discovery endpoint (system metadata)</td>
+        </tr>
+
+        <!-- Rooms -->
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1/rooms" target="_blank">/api/v1/rooms</a></td>
+            <td>- Retrieve list of all rooms</td>
+        </tr>
+
+        <tr>
+            <td class="method post">POST</td>
+            <td class="endpoint">/api/v1/rooms</td>
+            <td>- Create a new room in the system</td>
+        </tr>
+
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1/rooms/ROOM_ID" target="_blank">/api/v1/rooms/{roomId}</a></td>
+            <td>- Get details of a specific room by ID</td>
+        </tr>
+
+        <tr>
+            <td class="method delete">DELETE</td>
+            <td class="endpoint">/api/v1/rooms/{roomId}</td>
+            <td>- Delete an existing room</td>
+        </tr>
+
+        <!-- Sensors -->
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1/sensors" target="_blank">/api/v1/sensors</a></td>
+            <td>- Retrieve all registered sensors</td>
+        </tr>
+
+        <tr>
+            <td class="method post">POST</td>
+            <td class="endpoint">/api/v1/sensors</td>
+            <td>- Register a new sensor</td>
+        </tr>
+
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1/sensors?type=CO2" target="_blank">/api/v1/sensors?type=CO2</a></td>
+            <td>- Filter sensors by sensor type</td>
+        </tr>
+
+        <!-- Sensor Readings -->
+        <tr>
+            <td class="method get">GET</td>
+            <td class="endpoint"><a href="api/v1/sensors/SENSOR_ID/readings" target="_blank">/api/v1/sensors/{sensorId}/readings</a></td>
+            <td>- Retrieve readings for a specific sensor</td>
+        </tr>
+
+        <tr>
+            <td class="method post">POST</td>
+            <td class="endpoint">/api/v1/sensors/{sensorId}/readings</td>
+            <td>- Add a new reading for a sensor</td>
+        </tr>
+    </table>
+
+</body>
 </html>
