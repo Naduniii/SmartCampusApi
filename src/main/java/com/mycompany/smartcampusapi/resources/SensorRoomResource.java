@@ -70,6 +70,27 @@ public class SensorRoomResource {
 
         return Response.ok(existingRoom).build();
     }
+    
+    
+    @DELETE
+    @Path("/{roomId}")
+    public Response removeRoom(@PathParam("roomId") String roomId) {
+
+        Room existingRoom = roomData.get(roomId);
+
+        if (existingRoom == null) {
+            throw new ResourceNotFoundException("Requested room does not exist");
+        }
+
+        // Prevent deletion if sensors are still linked
+        if (existingRoom.getSensorIds() != null && !existingRoom.getSensorIds().isEmpty()) {
+            throw new RoomNotEmptyException("Cannot delete room because sensors are still assigned");
+        }
+
+        roomData.remove(roomId);
+
+        return Response.ok("Room successfully removed").build();
+    }
 
     
 }
