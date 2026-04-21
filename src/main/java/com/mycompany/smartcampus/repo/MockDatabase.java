@@ -19,36 +19,34 @@ import java.util.UUID;
  */
 
 public class MockDatabase {
-    // Rooms
+
     public static final Map<String, Room> ROOM_STORE = new HashMap<>();
 
-    // Sensors
     public static final Map<String, Sensor> SENSOR_STORE = new HashMap<>();
 
-    // Readings (sensorId -> list of readings)
     public static final Map<String, List<SensorReading>> SENSOR_READING_STORE = new HashMap<>();
 
     static {
 
-        // ===== Create Rooms =====
-        Room labRoom = new Room(UUID.randomUUID().toString(), "Lab 1", 10);
-        Room lectureRoom = new Room(UUID.randomUUID().toString(), "Lecture Hall", 100);
+        // Rooms
+        Room labRoom = new Room(UUID.randomUUID().toString(), "Hall 1", 10);
+        Room lectureRoom = new Room(UUID.randomUUID().toString(), "Main Hall", 100);
 
         ROOM_STORE.put(labRoom.getRoomId(), labRoom);
         ROOM_STORE.put(lectureRoom.getRoomId(), lectureRoom);
 
-        // ===== Create Sensors =====
+        // Sensors
         Sensor co2Sensor = new Sensor(UUID.randomUUID().toString(), "CO2", "WORKING", 400.0, labRoom.getRoomId());
         Sensor tempSensor = new Sensor(UUID.randomUUID().toString(), "TEMP", "MAINTANANCE", 25.0, lectureRoom.getRoomId());
 
         SENSOR_STORE.put(co2Sensor.getSensorId(), co2Sensor);
         SENSOR_STORE.put(tempSensor.getSensorId(), tempSensor);
 
-        // 🔗 Link sensors to rooms
+        // Link sensors to rooms
         labRoom.getSensorIds().add(co2Sensor.getSensorId());
         lectureRoom.getSensorIds().add(tempSensor.getSensorId());
 
-        // ===== Create Readings =====
+        // Readings
         List<SensorReading> co2Readings = new ArrayList<>();
         co2Readings.add(new SensorReading(
                 UUID.randomUUID().toString(),
