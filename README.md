@@ -235,9 +235,9 @@ The addSensor function explicitly annotates the method using @Consumes(MediaType
 
 The API has the ability to filter by using the @QueryParam(“type”)  annotation on  sensors and this method provides  better filtering methods for the following reasons:
 
-URL Paths are meant to identify a unique resource (e.g. /sensors{id})
+- URL Paths are meant to identify a unique resource (e.g. /sensors{id})
 
-Query Parameters modify how a collection of resources are presented or subset (e.g. type=CO2&status=ACTIVE) which allows for multiple filtering options without having to use a hard and confusing hierarchy for URLs.
+- Query Parameters modify how a collection of resources are presented or subset (e.g. type=CO2&status=ACTIVE) which allows for multiple filtering options without having to use a hard and confusing hierarchy for URLs.
 
 
 ## PART 4: Deep Nesting with Sub-Resources
