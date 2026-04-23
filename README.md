@@ -194,9 +194,10 @@ src/main/java/
 
 ### Q: Lifecycle of a JAX-RS Resource class
 
-In code for JAX-RS resource classes such as DiscoveryResource and SensorResource, the default lifecycle for the resource class is a request-scoped lifecycle. That means when a new HTTP request comes in, the resource class gets instantied (a new instance of the resource qualification) and thereafter once the response is sent, the resource qualification is destroyed (removed from memory).
+In code for JAX-RS resource classes such as DiscoveryResource and SensorResource, the default lifecycle for the resource class is a request-scoped lifecycle. That means when a new HTTP request comes in, the resource class gets instantiated (a new instance of the resource qualification) and thereafter once the response is sent, the resource qualification is destroyed (removed from memory).
 
-Since resource qualifications are not singletons, if store data in the instance variables, that data will be lost after the point at which the instance variables were last used (because the next request will have a new instance). To circumvent this,  utilize static in-memory data storage (for example: private static Map roomData) in  code.While this allows for data persistence across all requests, in a typical multi-threaded environment, static in-memory data structures would require synchronisation (for example: use of a ConcurrentHashMap) to avoid race conditions occurring from concurrent reads/writes.
+Since resource qualifications are not singletons, if data is stored in the instance variables, that data will be lost after the point at which the instance variables were last used (because the next request will have a new instance). To circumvent this,  utilize static in-memory data storage (for example: private static Map roomData) in this code.While this allows for data persistence across all requests, in a typical multi-threaded environment, static in-memory data structures would require synchronisation (for example: use of a ConcurrentHashMap) to avoid race conditions occurring from concurrent reads/writes.
+
 
 ### Q: Benefits of Hypermedia (HATEOAS)
 
@@ -209,11 +210,12 @@ There are three major benefits of using hypermedia links to discover available H
 
 ### Q: Implications of Returning IDs vs. Full objects
 
-The roomData object returned to the API has a room object returned for every room in the fetch AllRooms method.
+The roomData object returned to the API has a room object returned for every room in the fetchAllRooms method.
 
-Returning full objects has the benefit of reducing the amount of subsequent “follow-up” requests that would otherwise need to be made by the client for room detail requests which converges network bandwidth and reduces overall processing time.
+Returning full objects has the benefit of reducing the amount of subsequent “follow-up” requests that would otherwise need to be made by the client for room detail requests which conserves network bandwidth and reduces overall processing time. 
 
 Returning only IDs does save on bandwidth consumption and is faster to initially load, but requires the client to make multiple additional requests to retrieve the individual details for each room which can cause the API to become chattier.
+
 
 ### Q: Idempotency of the DELETE operation
 
@@ -222,15 +224,16 @@ The idempotency of the removeRoom operation through the SensorRoomResource is ev
 Regardless of the status code change occurring between 200 and 404, the actual state of the server has not changed - the room will still be deleted - therefore, the definition of idempotence has been satisfied.
 
 
+
 ## PART 3: Sensor Operations & Linking
 
 ### Q: Consequences of Mismatched Content Types
 
-The addSensor function explicitly annotates the method using @Consumes(Meadia type.APPLICATION_JSON).When a client tries to send in a data format other than that specified by the addSensor method, such as text/plain or application/xml, JAX_RS will automatically intercept their request. The request will be rejected with an HTTP 415 status code indicating that the MediaType being transmitted is not one which this resource can process.
+The addSensor function explicitly annotates the method using @Consumes(MediaType.APPLICATION_JSON).When a client tries to send in a data format other than that specified by the addSensor method, such as text/plain or application/xml, JAX_RS will automatically intercept their request. The request will be rejected with an HTTP 415 status code indicating that the MediaType being transmitted is not one which this resource can process.
 
 ### Q: Query Parameters vs. URL Paths for Filtering
 
-Have the ability to filter by using the @QueryParam(“type”)  annotation on  sensors and this method provides a better filtering methods for the following reasons:
+The API has the ability to filter by using the @QueryParam(“type”)  annotation on  sensors and this method provides  better filtering methods for the following reasons:
 
 URL Paths are meant to identify a unique resource (e.g. /sensors{id})
 
@@ -241,21 +244,21 @@ Query Parameters modify how a collection of resources are presented or subset (e
 
 ### Q: Benefit of the Sub-Resource Locator Pattern
 
-A sub-resource locator is an annotated method that uses the @Path annotation, but has no HTTP method that uses the @Path annotation, but has no HTTP method annotation (no @GET, @POST, etc.).It responds to a request with an instance of a different resource class, rather than directly meeting the needs of the request. JAX-RS then uses the actual HTTP methods from the returned resource to process the request and delegates the responsibility of processing that request to a separate class.In this implementation, I have a sub-resource locator at the path {sensorId}/readings that will return an instance of SensorReadingResource.All the endpoints that are related to readings (GET/ and POST) will be fully handled in that specific class.
+A sub-resource locator is an annotated method that uses the @Path annotation, but has no HTTP method annotation (no @GET, @POST, etc.).It responds to a request with an instance of a different resource class, rather than directly meeting the needs of the request. JAX-RS then uses the actual HTTP methods from the returned resource to process the request and delegates the responsibility of processing that request to a separate class.In this implementation, I have a sub-resource locator at the path {sensorId}/readings that will return an instance of SensorReadingResource.All the endpoints that are related to readings (GET/ and POST) will be fully handled in that specific class.
 
-The overall architecture of this is modular.Rather than having all the different nested Paths (like /sensors/{id}/readings/{rid}) inside one big controller class, the logic is separated into smaller classes that each have a well-defined responsibility. As the API grows, the resource classes will remain small, making it easier for you to test them independently and maintain them without impacting other, unrelated endpoints.
-
+The overall architecture of this is modular.Rather than having all the different nested Paths (like /sensors/{id}/readings/{rid}) inside one big controller class, the logic is separated into smaller classes that each have a well-defined responsibility. As the API grows, the resource classes will remain small, making it easier  to test them independently and maintain them without impacting other, unrelated endpoints.
 
 
 ## PART 5: Advanced Error Handling & Logging
 
 ### Q: Semantics of HTTP 422 vs. 404
 
-When a sensor is supplied with a roomId that does not exist, LinkedResourceNotFoundExceptionMapper maps this to an HTTP 422 Unprocessable Entity because the resource is not present in the database. This is an accurate representation of what happened because there is no problem with the request URL and the JSON payload is well-formed (syntactically valid); however the roomID referenced does not exist in the database thus making it semantically invalid. A 404 response would imply that the URL was invalid whereas the 422 response identifies the logical error of there being an incorrect reference to data.
+When a sensor is supplied with a roomId that does not exist, LinkedResourceNotFoundExceptionMapper maps this to an HTTP 422 Unprocessable Entity because the resource is not present in the in-memory store. This is an accurate representation of what happened because there is no problem with the request URL and the JSON payload is well-formed (syntactically valid); however the roomID referenced does not exist in the in-memory store thus making it semantically invalid. A 404 response would imply that the URL was invalid whereas the 422 response identifies the logical error of there being an incorrect reference to data.
+
 
 ### Q: Risks of Exposing Stack Trances
 
-Exposed raw Java stack traces on API response presents a major security flaw since they provide sensitive information such as the class names, package structure,library version, method name, line numbers, and server file path on the system to a potential adversary.
+Exposing raw Java stack traces in API responses presents a major security flaw since they provide sensitive information such as the class names, package structure,library version, method name, line numbers, and server file path on the system to a potential adversary.
 
 A disclosure of framework version numbers, such as the version of jersey (e.g 2.32), could be correlated against publicly available data of common vulnerabilities and exposures (CVE) to assist an adversary in identifying software attack vulnerabilities that may be exploited. Class names and package structure (e.g.com.mycompany.smartcampus), which are exposed by the raw stack traces, reveal the internal structure of the implementation and allow an adversary to construct a more precise attack against the system. The server file path on the system that is also displayed in the raw stack trace allows an adversary to construct a more detailed map of the deployment environment for the purpose of further exploiting the software stack.
 
@@ -264,7 +267,9 @@ In this situation, the GlobalExceptionMapper will intercept all unhandled Throwa
 
 ### Q: Advantages of JAX_RS Filters
 
-The use of ContainerRequestFilter and ContainerResponseFilter in conjunction with LoggingFilter allows  logging across crosscutting areas. When logging the request and response at a central point, and can log both with ease since  will not have to individually insert the repetitive Logger.info() calls into each resource method. This results in cleaner code that is less likely to contain omissions from manual insertions instead of using a single set of filters for your logging efforts.
+The use of ContainerRequestFilter and ContainerResponseFilter in conjunction with LoggingFilter allows  logging across crosscutting areas. When logging the request and response at a central point, and can log both with ease since one will not have to individually insert the repetitive Logger.info() calls into each resource method. This results in cleaner code that is less likely to contain omissions from manual insertions by using a single set of filters for all logging.
+Furthermore, filters apply automatically to every endpoint without modifying any resource method code, following the separation of concerns principle.
+
 
 
 
