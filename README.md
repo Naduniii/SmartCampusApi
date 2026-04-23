@@ -25,7 +25,7 @@ The application uses **in-memory storage (HashMap / ArrayList)** and follows cor
 
 ##  Base URL
 ```
-http://localhost:8080/api/v1
+http://localhost:8080/SmartCampusApi/api/v1
 ```
 
 
@@ -80,8 +80,8 @@ POST /api/v1/sensors/{sensorId}/readings
 
 ###  Clone Repository
 ```bash
-git clone https://github.com/binuriii/smartcampus.git
-cd smartcampus 
+git clone https://github.com/Naduniii/SmartCampusApi.git
+cd SmartCampusApi
 ```
 ### Build Project
 ```
@@ -94,36 +94,36 @@ Deploy .war file into Tomcat webapps/
 ### Run Server
 Start Tomcat and open:
 ```
-http://localhost:8080/api/v1
+http://localhost:8080/SmartCampusApi/api/v1
 ```
 ## Sample cURL Requests
  ### Get API Info
 ```
-curl http://localhost:8080/api/v1
+curl http://localhost:8080/SmartCampusApi/api/v1
 ```
  ### Create Room
 ```
-curl -X POST http://localhost:8080/api/v1/rooms \
+curl -X POST http://localhost:8080/SmartCampusApi/api/v1/rooms \
 -H "Content-Type: application/json" \
 -d '{"roomName":"Lab A","maxCapacity":30}'
 ```
 ### Get All Rooms
 ```
-curl http://localhost:8080/api/v1/rooms
+curl http://localhost:8080/SmartCampusApi/api/v1/rooms
 ```
 ### Create Sensor
 ```
-curl -X POST http://localhost:8080/api/v1/sensors \
+curl -X POST http://localhost:8080/SmartCampusApi/api/v1/sensors \
 -H "Content-Type: application/json" \
 -d '{"sensorType":"CO2","sensorStatus":"WORKING","sensorValue":400,"roomId":"ROOM_ID"}'
 ```
 ### Filter Sensors
 ```
-curl "http://localhost:8080/api/v1/sensors?type=CO2"
+curl "http://localhost:8080/SmartCampusApi/api/v1/sensors?type=CO2"
 ```
 ### Add Sensor Reading
 ```
-curl -X POST http://localhost:8080/api/v1/sensors/SENSOR_ID/readings \
+curl -X POST http://localhost:8080/SmartCampusApi/api/v1/sensors/SENSOR_ID/readings \
 -H "Content-Type: application/json" \
 -d '{"readingValue":420}'
 ```
