@@ -6,7 +6,7 @@ It provides endpoints to manage:
 
 -  Rooms  
 -  Sensors  
--  Sensor Readings  
+-  Sensor Readings 
 
 The application uses **in-memory storage (HashMap / ArrayList)** and follows core REST principles such as stateless communication, proper HTTP methods, and structured JSON responses.
 
@@ -212,9 +212,9 @@ There are three major benefits of using hypermedia links to discover available H
 
 The roomData object returned to the API has a room object returned for every room in the fetchAllRooms method.
 
-Returning full objects has the benefit of reducing the amount of subsequent “follow-up” requests that would otherwise need to be made by the client for room detail requests which conserves network bandwidth and reduces overall processing time. 
+- Returning full objects has the benefit of reducing the amount of subsequent “follow-up” requests that would otherwise need to be made by the client for room detail requests which conserves network bandwidth and reduces overall processing time. 
 
-Returning only IDs does save on bandwidth consumption and is faster to initially load, but requires the client to make multiple additional requests to retrieve the individual details for each room which can cause the API to become chattier.
+- Returning only IDs does save on bandwidth consumption and is faster to initially load, but requires the client to make multiple additional requests to retrieve the individual details for each room which can cause the API to become chattier.
 
 
 ### Q: Idempotency of the DELETE operation
